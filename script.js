@@ -5,108 +5,625 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
- // ==================================================
-// PREVIEW CONTOH KEMASAN
-// ==================================================
+  /* =========================================
+   PESANAN ACARA
+   PERNIKAHAN / HAJATAN / SYUKURAN / LAINNYA
+========================================= */
 
-const kemasanModal = document.getElementById('kemasanModal');
-const kemasanImage = document.getElementById('kemasanModalImage');
-const kemasanTitle = document.getElementById('kemasanModalTitle');
-const kemasanPrice = document.getElementById('kemasanModalPrice');
-const kemasanOrder = document.getElementById('kemasanModalOrder');
-const kemasanClose = document.getElementById('kemasanModalClose');
+  const acaraModal =
+    document.getElementById("acaraModal");
 
-const gambarKemasan = {
-  kecil: {
-    nama: 'Kemasan Kecil',
-    harga: 'Rp 8.000',
-    gambar: 'assets/kemasan/kemasan-kecil.webp'
-  },
+  const acaraModalClose =
+    document.getElementById("acaraModalClose");
 
-  besar: {
-    nama: 'Kemasan Besar',
-    harga: 'Rp 12.000',
-    gambar: 'assets/kemasan/kemasan-besar.webp'
-  },
+  const acaraForm =
+    document.getElementById("acaraForm");
 
-  '1kg': {
-    nama: 'Kemasan 1 Kg',
-    harga: 'Rp 75.000',
-    gambar: 'assets/kemasan/kemasan-1kg.webp'
+  const acaraModalTitle =
+    document.getElementById("acaraModalTitle");
+
+  const acaraJumlah =
+    document.getElementById("acaraJumlah");
+
+  const acaraKemasan =
+    document.getElementById("acaraKemasan");
+
+  const acaraTotal =
+    document.getElementById("acaraTotal");
+
+
+  // =========================================================
+  // ACARA LAINNYA
+  // =========================================================
+
+  const acaraLainnyaGroup =
+    document.getElementById("acaraLainnyaGroup");
+
+  const acaraNamaLainnya =
+    document.getElementById("acaraNamaLainnya");
+
+
+  let acaraTerpilih = "";
+
+  let acaraLainnyaMode = false;
+
+
+  // =========================================================
+  // FORMAT RUPIAH
+  // =========================================================
+
+  function formatRupiahAcara(angka) {
+
+    return new Intl.NumberFormat("id-ID", {
+
+      style: "currency",
+
+      currency: "IDR",
+
+      minimumFractionDigits: 0
+
+    }).format(angka);
+
   }
-};
-
-document.querySelectorAll('.kemasan-btn').forEach(button => {
-
-  button.addEventListener('click', () => {
-
-    const jenis = button.dataset.kemasan;
-    const data = gambarKemasan[jenis];
-
-    if (!data || !kemasanModal) return;
-
-    kemasanTitle.textContent = data.nama;
-    kemasanPrice.textContent = data.harga;
-    kemasanImage.src = data.gambar;
-    kemasanImage.alt = data.nama;
-
-    kemasanOrder.href =
-      `https://wa.me/6289639173344?text=${encodeURIComponent(
-        `Halo, saya ingin memesan ${data.nama} Keripik Tempe Lancar Abadi dengan harga ${data.harga}.`
-      )}`;
-
-    kemasanModal.classList.add('active');
-    kemasanModal.setAttribute('aria-hidden', 'false');
-
-    document.body.style.overflow = 'hidden';
-
-  });
-
-});
-
-function tutupKemasan() {
-
-  if (!kemasanModal) return;
-
-  kemasanModal.classList.remove('active');
-  kemasanModal.setAttribute('aria-hidden', 'true');
-
-  document.body.style.overflow = '';
-
-}
 
 
-// Tombol X
-kemasanClose?.addEventListener(
-  'click',
-  tutupKemasan
-);
+  // =========================================================
+  // HITUNG TOTAL
+  // =========================================================
+
+  function updateTotalAcara() {
+
+    if (
+      !acaraJumlah ||
+      !acaraKemasan ||
+      !acaraTotal
+    ) {
+      return;
+    }
 
 
-// Klik background
-document
-  .querySelectorAll('[data-close-kemasan]')
-  .forEach(element => {
+    const jumlah =
+      parseInt(acaraJumlah.value) || 0;
 
-    element.addEventListener(
-      'click',
-      tutupKemasan
+
+    const selectedOption =
+      acaraKemasan.options[
+      acaraKemasan.selectedIndex
+      ];
+
+
+    const harga =
+      parseInt(
+        selectedOption?.dataset.price
+      ) || 0;
+
+
+    const total =
+      jumlah * harga;
+
+
+    acaraTotal.textContent =
+      formatRupiahAcara(total);
+
+  }
+
+
+  // =========================================================
+  // BUKA MODAL ACARA
+  // =========================================================
+
+  document.querySelectorAll(
+    ".acara-btn"
+  ).forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        if (!acaraModal) {
+          return;
+        }
+
+
+        const jenisAcara =
+          button.dataset.acara || "";
+
+
+        // ===================================================
+        // ACARA LAINNYA
+        // ===================================================
+
+        if (jenisAcara === "lainnya") {
+
+          acaraLainnyaMode = true;
+
+          acaraTerpilih = "";
+
+
+          if (acaraModalTitle) {
+
+            acaraModalTitle.textContent =
+              "Pesanan Acara Lainnya";
+
+          }
+
+
+          // Tampilkan input jenis acara
+
+          if (acaraLainnyaGroup) {
+
+            acaraLainnyaGroup.style.display =
+              "block";
+
+          }
+
+
+          // Kosongkan input
+
+          if (acaraNamaLainnya) {
+
+            acaraNamaLainnya.value = "";
+
+          }
+
+        }
+
+
+        // ===================================================
+        // ACARA YANG SUDAH DITENTUKAN
+        // ===================================================
+
+        else {
+
+          acaraLainnyaMode = false;
+
+          acaraTerpilih = jenisAcara;
+
+
+          if (acaraModalTitle) {
+
+            acaraModalTitle.textContent =
+              `Pesanan ${acaraTerpilih}`;
+
+          }
+
+
+          // Sembunyikan input acara lainnya
+
+          if (acaraLainnyaGroup) {
+
+            acaraLainnyaGroup.style.display =
+              "none";
+
+          }
+
+        }
+
+
+        // ===================================================
+        // RESET JUMLAH
+        // ===================================================
+
+        if (acaraJumlah) {
+
+          acaraJumlah.value = 1;
+
+        }
+
+
+        // ===================================================
+        // RESET KEMASAN
+        // ===================================================
+
+        if (acaraKemasan) {
+
+          acaraKemasan.value = "kecil";
+
+        }
+
+
+        // Hitung total awal
+
+        updateTotalAcara();
+
+
+        // ===================================================
+        // BUKA MODAL
+        // ===================================================
+
+        acaraModal.classList.add(
+          "active"
+        );
+
+
+        acaraModal.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+
+        document.body.style.overflow =
+          "hidden";
+
+      }
     );
 
   });
 
 
-// Tombol ESC
-document.addEventListener(
-  'keydown',
-  event => {
+  // =========================================================
+  // UPDATE SAAT JUMLAH BERUBAH
+  // =========================================================
 
-    if (event.key === 'Escape') {
-      tutupKemasan();
+  acaraJumlah?.addEventListener(
+    "input",
+    updateTotalAcara
+  );
+
+
+  // =========================================================
+  // UPDATE SAAT KEMASAN BERUBAH
+  // =========================================================
+
+  acaraKemasan?.addEventListener(
+    "change",
+    updateTotalAcara
+  );
+
+
+  // =========================================================
+  // TUTUP MODAL
+  // =========================================================
+
+  function closeAcaraModal() {
+
+    if (!acaraModal) {
+      return;
     }
 
+
+    acaraModal.classList.remove(
+      "active"
+    );
+
+
+    acaraModal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+    document.body.style.overflow =
+      "";
+
   }
-);
+
+
+  // Tombol X
+
+  acaraModalClose?.addEventListener(
+    "click",
+    closeAcaraModal
+  );
+
+
+  // Klik backdrop
+
+  document
+    .querySelectorAll("[data-close-acara]")
+    .forEach(element => {
+
+      element.addEventListener(
+        "click",
+        closeAcaraModal
+      );
+
+    });
+
+
+  // =========================================================
+  // MASUKKAN PESANAN ACARA KE KERANJANG
+  // =========================================================
+
+  acaraForm?.addEventListener(
+    "submit",
+    (event) => {
+
+      event.preventDefault();
+
+
+      // =====================================================
+      // JUMLAH
+      // =====================================================
+
+      const jumlah =
+        parseInt(acaraJumlah.value);
+
+
+      if (!jumlah || jumlah < 1) {
+
+        alert(
+          "Masukkan jumlah pesanan terlebih dahulu."
+        );
+
+        acaraJumlah.focus();
+
+        return;
+
+      }
+
+
+      // =====================================================
+      // KEMASAN
+      // =====================================================
+
+      const selectedOption =
+        acaraKemasan.options[
+        acaraKemasan.selectedIndex
+        ];
+
+
+      const kemasan =
+        acaraKemasan.value;
+
+
+      const harga =
+        parseInt(
+          selectedOption.dataset.price
+        );
+
+
+      // =====================================================
+      // NAMA KEMASAN
+      // =====================================================
+
+      let namaKemasan = "";
+
+
+      if (kemasan === "kecil") {
+
+        namaKemasan = "Kecil";
+
+      }
+
+
+      if (kemasan === "besar") {
+
+        namaKemasan = "Besar";
+
+      }
+
+
+      if (kemasan === "1kg") {
+
+        namaKemasan = "1 Kg";
+
+      }
+
+
+      // =====================================================
+      // TENTUKAN NAMA ACARA
+      // =====================================================
+
+      let namaAcara =
+        acaraTerpilih;
+
+
+      // =====================================================
+      // JIKA ACARA LAINNYA
+      // =====================================================
+
+      if (acaraLainnyaMode) {
+
+        namaAcara =
+          acaraNamaLainnya?.value.trim() || "";
+
+
+        // Wajib mengisi jenis acara
+
+        if (!namaAcara) {
+
+          alert(
+            "Silakan tuliskan jenis acara terlebih dahulu."
+          );
+
+
+          acaraNamaLainnya?.focus();
+
+          return;
+
+        }
+
+      }
+
+
+      // =====================================================
+      // NAMA PRODUK
+      // =====================================================
+
+      const namaProduk =
+        `${namaAcara} - Keripik Tempe ${namaKemasan}`;
+
+
+      // =====================================================
+      // TAMBAHKAN KE CART UTAMA
+      // =====================================================
+
+      /*
+        Karena kode ini berada di dalam
+        DOMContentLoaded yang sama dengan
+        sistem cart utama, langsung gunakan
+        variabel cart.
+      */
+
+      const existing =
+        cart.find(item => {
+
+          return (
+            item.name === namaProduk &&
+            Number(item.price) === harga
+          );
+
+        });
+
+
+      // Kalau produk/acara yang sama sudah ada
+
+      if (existing) {
+
+        existing.quantity += jumlah;
+
+      }
+
+      // Kalau belum ada
+
+      else {
+
+        cart.push({
+
+          name:
+            namaProduk,
+
+          price:
+            harga,
+
+          quantity:
+            jumlah
+
+        });
+
+      }
+
+
+      // =====================================================
+      // SIMPAN CART
+      // =====================================================
+
+      saveCart();
+
+
+      // =====================================================
+      // REFRESH CART
+      // =====================================================
+
+      renderCart();
+
+      updateCartCount();
+
+
+      // =====================================================
+      // TUTUP MODAL ACARA
+      // =====================================================
+
+      closeAcaraModal();
+
+
+      // =====================================================
+      // BUKA KERANJANG
+      // =====================================================
+
+      showCart();
+
+    }
+  );
+
+  // ==================================================
+  // PREVIEW CONTOH KEMASAN
+  // ==================================================
+
+  const kemasanModal = document.getElementById('kemasanModal');
+  const kemasanImage = document.getElementById('kemasanModalImage');
+  const kemasanTitle = document.getElementById('kemasanModalTitle');
+  const kemasanPrice = document.getElementById('kemasanModalPrice');
+  const kemasanOrder = document.getElementById('kemasanModalOrder');
+  const kemasanClose = document.getElementById('kemasanModalClose');
+
+  const gambarKemasan = {
+    kecil: {
+      nama: 'Kemasan Kecil',
+      harga: 'Rp 8.000',
+      gambar: 'assets/kemasan/kemasan-kecil.webp'
+    },
+
+    besar: {
+      nama: 'Kemasan Besar',
+      harga: 'Rp 12.000',
+      gambar: 'assets/kemasan/kemasan-besar.webp'
+    },
+
+    '1kg': {
+      nama: 'Kemasan 1 Kg',
+      harga: 'Rp 75.000',
+      gambar: 'assets/kemasan/kemasan-1kg.webp'
+    }
+  };
+
+  document.querySelectorAll('.kemasan-btn').forEach(button => {
+
+    button.addEventListener('click', () => {
+
+      const jenis = button.dataset.kemasan;
+      const data = gambarKemasan[jenis];
+
+      if (!data || !kemasanModal) return;
+
+      kemasanTitle.textContent = data.nama;
+      kemasanPrice.textContent = data.harga;
+      kemasanImage.src = data.gambar;
+      kemasanImage.alt = data.nama;
+
+      kemasanModal.classList.add('active');
+      kemasanModal.setAttribute('aria-hidden', 'false');
+
+      document.body.style.overflow = 'hidden';
+
+    });
+
+  });
+
+  function tutupKemasan() {
+
+    if (!kemasanModal) return;
+
+    kemasanModal.classList.remove('active');
+    kemasanModal.setAttribute('aria-hidden', 'true');
+
+    document.body.style.overflow = '';
+
+  }
+
+
+  // Tombol X
+  kemasanClose?.addEventListener(
+    'click',
+    tutupKemasan
+  );
+
+
+  // Klik background
+  document
+    .querySelectorAll('[data-close-kemasan]')
+    .forEach(element => {
+
+      element.addEventListener(
+        'click',
+        tutupKemasan
+      );
+
+    });
+
+
+  // Tombol ESC
+  document.addEventListener(
+    'keydown',
+    event => {
+
+      if (event.key === 'Escape') {
+        tutupKemasan();
+      }
+
+    }
+  );
 
   // ==================================================
   // MOBILE NAVIGATION
@@ -652,7 +1169,7 @@ document.addEventListener(
 
       renderCart();
 
-  };
+    };
 
 
 
@@ -1224,7 +1741,7 @@ document.addEventListener(
 
 
         const message =
-`Halo Owner Lancar Abadi 👋
+          `Halo Owner Lancar Abadi 👋
 
 Saya ingin melakukan pemesanan Keripik Tempe Lancar Abadi.
 
