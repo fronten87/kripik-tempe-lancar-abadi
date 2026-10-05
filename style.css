@@ -49,7 +49,10 @@ a {
   color: inherit;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: 'Playfair Display', serif;
   color: var(--brown-900);
   line-height: 1.2;
@@ -330,8 +333,15 @@ h1, h2, h3, h4 {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
 /* ==================== Section Head ==================== */
@@ -611,7 +621,7 @@ h1, h2, h3, h4 {
   margin-bottom: 18px;
 }
 
-.order-content > p {
+.order-content>p {
   color: var(--text-light);
   margin-bottom: 28px;
   font-size: 16px;
@@ -804,7 +814,8 @@ h1, h2, h3, h4 {
   margin-bottom: 6px;
 }
 
-.info-card p, .info-card a {
+.info-card p,
+.info-card a {
   color: var(--text-light);
   font-size: 14px;
   line-height: 1.5;
@@ -937,8 +948,15 @@ h1, h2, h3, h4 {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.6); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 
 /* ==================== Reveal Animation ==================== */
@@ -955,6 +973,7 @@ h1, h2, h3, h4 {
 
 /* ==================== Responsive ==================== */
 @media (max-width: 992px) {
+
   .hero-container,
   .about-grid,
   .product-card,
@@ -1167,8 +1186,7 @@ h1, h2, h3, h4 {
     0 30px 80px rgba(0, 0, 0, 0.35);
 
   transform:
-    translateY(20px)
-    scale(0.96);
+    translateY(20px) scale(0.96);
 
   transition:
     transform 0.28s ease;
@@ -1176,8 +1194,7 @@ h1, h2, h3, h4 {
 
 .kemasan-modal.active .kemasan-modal-content {
   transform:
-    translateY(0)
-    scale(1);
+    translateY(0) scale(1);
 }
 
 
@@ -1331,7 +1348,8 @@ h1, h2, h3, h4 {
   }
 
 }
- /* ==========================================
+
+/* ==========================================
    SCROLLBAR AUTO HIDE
    ========================================== */
 
@@ -1371,6 +1389,7 @@ html::-webkit-scrollbar-thumb:hover {
 html:hover {
   scrollbar-color: rgba(74, 124, 89, 0.55) transparent;
 }
+
 /* ==========================================
    AUTO HIDE SCROLLBAR
    ========================================== */
@@ -1407,6 +1426,7 @@ html.scrollbar-visible::-webkit-scrollbar-thumb {
 html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   background: rgba(74, 124, 89, 0.95);
 }
+
 /* ===================================================
    SHOPPING CART
 =================================================== */
@@ -1456,8 +1476,7 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   background: var(--green-700);
 
   box-shadow:
-    0 8px 20px
-    rgba(74, 124, 89, .22);
+    0 8px 20px rgba(74, 124, 89, .22);
 }
 
 
@@ -1492,8 +1511,7 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   z-index: 1900;
 
   box-shadow:
-    0 10px 30px
-    rgba(0, 0, 0, .22);
+    0 10px 30px rgba(0, 0, 0, .22);
 
   transition:
     transform .3s ease,
@@ -1502,12 +1520,10 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
 
 .cart-floating:hover {
   transform:
-    translateY(-4px)
-    scale(1.04);
+    translateY(-4px) scale(1.04);
 
   box-shadow:
-    0 15px 35px
-    rgba(0, 0, 0, .3);
+    0 15px 35px rgba(0, 0, 0, .3);
 }
 
 .cart-floating span {
@@ -1597,15 +1613,13 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   flex-direction: column;
 
   box-shadow:
-    -20px 0 60px
-    rgba(0, 0, 0, .2);
+    -20px 0 60px rgba(0, 0, 0, .2);
 
   transform:
     translateX(100%);
 
   transition:
-    transform .4s
-    cubic-bezier(.22, 1, .36, 1);
+    transform .4s cubic-bezier(.22, 1, .36, 1);
 }
 
 .cart-modal.active .cart-panel {
@@ -1899,23 +1913,18 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   border-radius: 20px;
 
   box-shadow:
-    0 30px 80px
-    rgba(0, 0, 0, .3);
+    0 30px 80px rgba(0, 0, 0, .3);
 
   transform:
-    translateY(30px)
-    scale(.96);
+    translateY(30px) scale(.96);
 
   transition:
-    transform .35s
-    cubic-bezier(.22, 1, .36, 1);
+    transform .35s cubic-bezier(.22, 1, .36, 1);
 }
 
-.checkout-modal.active
-.checkout-panel {
+.checkout-modal.active .checkout-panel {
   transform:
-    translateY(0)
-    scale(1);
+    translateY(0) scale(1);
 }
 
 #checkoutForm {
@@ -1980,8 +1989,7 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
     var(--green-500);
 
   box-shadow:
-    0 0 0 3px
-    rgba(74, 124, 89, .1);
+    0 0 0 3px rgba(74, 124, 89, .1);
 }
 
 
@@ -2091,6 +2099,7 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
   }
 
 }
+
 .kemasan-btn {
   display: inline-flex;
   align-items: center;
@@ -2124,4 +2133,198 @@ html.scrollbar-visible::-webkit-scrollbar-thumb:hover {
 
 .kemasan-btn i {
   font-size: 12px;
+}
+
+/* =========================================
+   ACARA BUTTON
+========================================= */
+
+.acara-btn {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  position: relative;
+  padding-right: 50px;
+}
+
+.acara-btn .acara-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+.acara-btn:hover .acara-arrow {
+  transform: translate(5px, -50%);
+}
+
+
+/* =========================================
+   ACARA MODAL
+========================================= */
+
+.acara-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+.acara-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.acara-modal-backdrop {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  backdrop-filter: blur(5px);
+}
+
+
+.acara-modal-content {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 520px;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  background: #fff;
+
+  border-radius: 24px;
+
+  padding: 32px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.25);
+
+  transform: translateY(30px) scale(0.96);
+
+  transition:
+    transform 0.3s ease;
+}
+
+.acara-modal.active .acara-modal-content {
+  transform: translateY(0) scale(1);
+}
+
+
+.acara-modal-close {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+}
+
+
+.acara-modal-header {
+  margin-bottom: 25px;
+  padding-right: 35px;
+}
+
+.acara-modal-header h3 {
+  margin: 8px 0;
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+}
+
+.acara-modal-header p {
+  margin: 0;
+  color: #777;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   FORM ACARA
+========================================= */
+
+.acara-modal .form-group {
+  margin-bottom: 20px;
+}
+
+.acara-modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.acara-modal input,
+.acara-modal select {
+  width: 100%;
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.acara-modal input:focus,
+.acara-modal select:focus {
+  border-color: #8b5e34;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 94, 52, 0.12);
+}
+
+.acara-modal small {
+  display: block;
+  margin-top: 7px;
+  color: #888;
+}
+
+
+/* =========================================
+   TOTAL ACARA
+========================================= */
+
+.acara-total-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 25px 0;
+
+  padding: 18px;
+
+  border-radius: 15px;
+
+  background: #f8f5ef;
+}
+
+.acara-total-box span {
+  font-weight: 500;
+}
+
+.acara-total-box strong {
+  font-size: 22px;
 }
