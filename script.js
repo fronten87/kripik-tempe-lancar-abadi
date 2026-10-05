@@ -5,527 +5,455 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* =========================================
+/* =========================================
    PESANAN ACARA
    PERNIKAHAN / HAJATAN / SYUKURAN / LAINNYA
 ========================================= */
 
-  const acaraModal =
-    document.getElementById("acaraModal");
+const acaraModal = document.getElementById("acaraModal");
+const acaraModalClose = document.getElementById("acaraModalClose");
+const acaraForm = document.getElementById("acaraForm");
 
-  const acaraModalClose =
-    document.getElementById("acaraModalClose");
+const acaraModalTitle = document.getElementById("acaraModalTitle");
+const acaraJumlah = document.getElementById("acaraJumlah");
+const acaraKemasan = document.getElementById("acaraKemasan");
+const acaraTotal = document.getElementById("acaraTotal");
 
-  const acaraForm =
-    document.getElementById("acaraForm");
+const acaraLainnyaGroup =
+  document.getElementById("acaraLainnyaGroup");
 
-  const acaraModalTitle =
-    document.getElementById("acaraModalTitle");
+const acaraNamaLainnya =
+  document.getElementById("acaraNamaLainnya");
 
-  const acaraJumlah =
-    document.getElementById("acaraJumlah");
-
-  const acaraKemasan =
-    document.getElementById("acaraKemasan");
-
-  const acaraTotal =
-    document.getElementById("acaraTotal");
+let acaraTerpilih = "";
+let acaraLainnyaMode = false;
 
 
-  // =========================================================
-  // ACARA LAINNYA
-  // =========================================================
+/* =========================================
+   FORMAT RUPIAH
+========================================= */
 
-  const acaraLainnyaGroup =
-    document.getElementById("acaraLainnyaGroup");
-
-  const acaraNamaLainnya =
-    document.getElementById("acaraNamaLainnya");
-
-
-  let acaraTerpilih = "";
-
-  let acaraLainnyaMode = false;
+function formatRupiahAcara(angka) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0
+  }).format(angka);
+}
 
 
-  // =========================================================
-  // FORMAT RUPIAH
-  // =========================================================
+/* =========================================
+   HITUNG TOTAL PESANAN ACARA
+========================================= */
 
-  function formatRupiahAcara(angka) {
+function updateTotalAcara() {
 
-    return new Intl.NumberFormat("id-ID", {
-
-      style: "currency",
-
-      currency: "IDR",
-
-      minimumFractionDigits: 0
-
-    }).format(angka);
-
+  if (!acaraJumlah || !acaraKemasan || !acaraTotal) {
+    return;
   }
 
+  const jumlah =
+    parseInt(acaraJumlah.value) || 0;
 
-  // =========================================================
-  // HITUNG TOTAL
-  // =========================================================
-
-  function updateTotalAcara() {
-
-    if (
-      !acaraJumlah ||
-      !acaraKemasan ||
-      !acaraTotal
-    ) {
-      return;
-    }
-
-
-    const jumlah =
-      parseInt(acaraJumlah.value) || 0;
-
-
-    const selectedOption =
-      acaraKemasan.options[
+  const selectedOption =
+    acaraKemasan.options[
       acaraKemasan.selectedIndex
-      ];
+    ];
+
+  const harga =
+    parseInt(
+      selectedOption?.dataset.price
+    ) || 0;
+
+  const total =
+    jumlah * harga;
+
+  acaraTotal.textContent =
+    formatRupiahAcara(total);
+}
 
 
-    const harga =
-      parseInt(
-        selectedOption?.dataset.price
-      ) || 0;
+/* =========================================
+   BUKA MODAL ACARA
+========================================= */
+
+document
+  .querySelectorAll(".acara-btn")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      if (!acaraModal) {
+        return;
+      }
+
+      const jenisAcara =
+        button.dataset.acara || "";
 
 
-    const total =
-      jumlah * harga;
+      /* =====================================
+         ACARA LAINNYA
+      ===================================== */
 
+      if (jenisAcara === "lainnya") {
 
-    acaraTotal.textContent =
-      formatRupiahAcara(total);
+        acaraLainnyaMode = true;
+        acaraTerpilih = "";
 
-  }
-
-
-  // =========================================================
-  // BUKA MODAL ACARA
-  // =========================================================
-
-  document.querySelectorAll(
-    ".acara-btn"
-  ).forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        if (!acaraModal) {
-          return;
+        if (acaraModalTitle) {
+          acaraModalTitle.textContent =
+            "Pesanan Acara Lainnya";
         }
 
-
-        const jenisAcara =
-          button.dataset.acara || "";
-
-
-        // ===================================================
-        // ACARA LAINNYA
-        // ===================================================
-
-        if (jenisAcara === "lainnya") {
-
-          acaraLainnyaMode = true;
-
-          acaraTerpilih = "";
-
-
-          if (acaraModalTitle) {
-
-            acaraModalTitle.textContent =
-              "Pesanan Acara Lainnya";
-
-          }
-
-
-          // Tampilkan input jenis acara
-
-          if (acaraLainnyaGroup) {
-
-            acaraLainnyaGroup.style.display =
-              "block";
-
-          }
-
-
-          // Kosongkan input
-
-          if (acaraNamaLainnya) {
-
-            acaraNamaLainnya.value = "";
-
-          }
-
+        if (acaraLainnyaGroup) {
+          acaraLainnyaGroup.style.display =
+            "block";
         }
 
-
-        // ===================================================
-        // ACARA YANG SUDAH DITENTUKAN
-        // ===================================================
-
-        else {
-
-          acaraLainnyaMode = false;
-
-          acaraTerpilih = jenisAcara;
-
-
-          if (acaraModalTitle) {
-
-            acaraModalTitle.textContent =
-              `Pesanan ${acaraTerpilih}`;
-
-          }
-
-
-          // Sembunyikan input acara lainnya
-
-          if (acaraLainnyaGroup) {
-
-            acaraLainnyaGroup.style.display =
-              "none";
-
-          }
-
+        if (acaraNamaLainnya) {
+          acaraNamaLainnya.value = "";
         }
-
-
-        // ===================================================
-        // RESET JUMLAH
-        // ===================================================
-
-        if (acaraJumlah) {
-
-          acaraJumlah.value = 1;
-
-        }
-
-
-        // ===================================================
-        // RESET KEMASAN
-        // ===================================================
-
-        if (acaraKemasan) {
-
-          acaraKemasan.value = "kecil";
-
-        }
-
-
-        // Hitung total awal
-
-        updateTotalAcara();
-
-
-        // ===================================================
-        // BUKA MODAL
-        // ===================================================
-
-        acaraModal.classList.add(
-          "active"
-        );
-
-
-        acaraModal.setAttribute(
-          "aria-hidden",
-          "false"
-        );
-
-
-        document.body.style.overflow =
-          "hidden";
 
       }
+
+
+      /* =====================================
+         ACARA YANG SUDAH DITENTUKAN
+      ===================================== */
+
+      else {
+
+        acaraLainnyaMode = false;
+        acaraTerpilih = jenisAcara;
+
+        if (acaraModalTitle) {
+          acaraModalTitle.textContent =
+            `Pesanan ${acaraTerpilih}`;
+        }
+
+        if (acaraLainnyaGroup) {
+          acaraLainnyaGroup.style.display =
+            "none";
+        }
+
+      }
+
+
+      /* =====================================
+         RESET FORM
+      ===================================== */
+
+      if (acaraJumlah) {
+        acaraJumlah.value = 1;
+      }
+
+      if (acaraKemasan) {
+        acaraKemasan.value = "kecil";
+      }
+
+
+      updateTotalAcara();
+
+
+      /* =====================================
+         TAMPILKAN MODAL
+      ===================================== */
+
+      acaraModal.classList.add("active");
+
+      acaraModal.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      document.body.style.overflow = "hidden";
+
+    });
+
+  });
+
+
+/* =========================================
+   UPDATE JUMLAH
+========================================= */
+
+acaraJumlah?.addEventListener(
+  "input",
+  updateTotalAcara
+);
+
+
+/* =========================================
+   UPDATE KEMASAN
+========================================= */
+
+acaraKemasan?.addEventListener(
+  "change",
+  updateTotalAcara
+);
+
+
+/* =========================================
+   TUTUP MODAL
+========================================= */
+
+function closeAcaraModal() {
+
+  if (!acaraModal) {
+    return;
+  }
+
+  acaraModal.classList.remove("active");
+
+  acaraModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
+}
+
+
+/* =========================================
+   TOMBOL X
+========================================= */
+
+acaraModalClose?.addEventListener(
+  "click",
+  closeAcaraModal
+);
+
+
+/* =========================================
+   KLIK BACKDROP
+========================================= */
+
+document
+  .querySelectorAll("[data-close-acara]")
+  .forEach(element => {
+
+    element.addEventListener(
+      "click",
+      closeAcaraModal
     );
 
   });
 
 
-  // =========================================================
-  // UPDATE SAAT JUMLAH BERUBAH
-  // =========================================================
+/* =========================================
+   TOMBOL ESC
+========================================= */
 
-  acaraJumlah?.addEventListener(
-    "input",
-    updateTotalAcara
-  );
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      acaraModal?.classList.contains("active")
+    ) {
+
+      closeAcaraModal();
+
+    }
+
+  }
+);
 
 
-  // =========================================================
-  // UPDATE SAAT KEMASAN BERUBAH
-  // =========================================================
+/* =========================================
+   SUBMIT PESANAN ACARA
+========================================= */
 
-  acaraKemasan?.addEventListener(
-    "change",
-    updateTotalAcara
-  );
+acaraForm?.addEventListener(
+  "submit",
+  event => {
+
+    event.preventDefault();
 
 
-  // =========================================================
-  // TUTUP MODAL
-  // =========================================================
+    /* =====================================
+       VALIDASI JUMLAH
+    ===================================== */
 
-  function closeAcaraModal() {
+    const jumlah =
+      parseInt(acaraJumlah?.value) || 0;
 
-    if (!acaraModal) {
+    if (jumlah < 1) {
+
+      alert(
+        "Masukkan jumlah pesanan terlebih dahulu."
+      );
+
+      acaraJumlah?.focus();
+
       return;
     }
 
 
-    acaraModal.classList.remove(
-      "active"
-    );
+    /* =====================================
+       AMBIL DATA KEMASAN
+    ===================================== */
 
+    const selectedOption =
+      acaraKemasan?.options[
+        acaraKemasan.selectedIndex
+      ];
 
-    acaraModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    if (!selectedOption) {
 
-
-    document.body.style.overflow =
-      "";
-
-  }
-
-
-  // Tombol X
-
-  acaraModalClose?.addEventListener(
-    "click",
-    closeAcaraModal
-  );
-
-
-  // Klik backdrop
-
-  document
-    .querySelectorAll("[data-close-acara]")
-    .forEach(element => {
-
-      element.addEventListener(
-        "click",
-        closeAcaraModal
+      alert(
+        "Silakan pilih ukuran kemasan."
       );
 
-    });
+      return;
+    }
+
+    const kemasan =
+      acaraKemasan.value;
+
+    const harga =
+      parseInt(
+        selectedOption.dataset.price
+      ) || 0;
+
+    if (harga <= 0) {
+
+      alert(
+        "Harga kemasan tidak valid."
+      );
+
+      return;
+    }
 
 
-  // =========================================================
-  // MASUKKAN PESANAN ACARA KE KERANJANG
-  // =========================================================
+    /* =====================================
+       NAMA KEMASAN
+    ===================================== */
 
-  acaraForm?.addEventListener(
-    "submit",
-    (event) => {
+    let namaKemasan = "";
 
-      event.preventDefault();
+    if (kemasan === "kecil") {
+      namaKemasan = "Kecil";
+    }
+
+    else if (kemasan === "besar") {
+      namaKemasan = "Besar";
+    }
+
+    else if (kemasan === "1kg") {
+      namaKemasan = "1 Kg";
+    }
+
+    else {
+      namaKemasan =
+        selectedOption.textContent
+          .split("—")[0]
+          .trim();
+    }
 
 
-      // =====================================================
-      // JUMLAH
-      // =====================================================
+    /* =====================================
+       NAMA ACARA
+    ===================================== */
 
-      const jumlah =
-        parseInt(acaraJumlah.value);
+    let namaAcara =
+      acaraTerpilih;
 
 
-      if (!jumlah || jumlah < 1) {
+    /* =====================================
+       ACARA LAINNYA
+    ===================================== */
+
+    if (acaraLainnyaMode) {
+
+      namaAcara =
+        acaraNamaLainnya?.value.trim() || "";
+
+      if (!namaAcara) {
 
         alert(
-          "Masukkan jumlah pesanan terlebih dahulu."
+          "Silakan tuliskan jenis acara terlebih dahulu."
         );
 
-        acaraJumlah.focus();
+        acaraNamaLainnya?.focus();
 
         return;
-
       }
+    }
 
 
-      // =====================================================
-      // KEMASAN
-      // =====================================================
+    /* =====================================
+       VALIDASI ACARA
+    ===================================== */
 
-      const selectedOption =
-        acaraKemasan.options[
-        acaraKemasan.selectedIndex
-        ];
+    if (!namaAcara) {
+
+      alert(
+        "Jenis acara belum dipilih."
+      );
+
+      return;
+    }
 
 
-      const kemasan =
-        acaraKemasan.value;
+    /* =====================================
+       NAMA PRODUK
+    ===================================== */
+
+    const namaProduk =
+      `${namaAcara} - Keripik Tempe ${namaKemasan}`;
 
 
-      const harga =
-        parseInt(
-          selectedOption.dataset.price
+    /* =====================================
+       CEK PESANAN YANG SAMA
+    ===================================== */
+
+    const existing =
+      cart.find(item => {
+
+        return (
+          item.name === namaProduk &&
+          Number(item.price) === harga
         );
 
+      });
 
-      // =====================================================
-      // NAMA KEMASAN
-      // =====================================================
 
-      let namaKemasan = "";
+    /* =====================================
+       TAMBAHKAN KE CART
+    ===================================== */
 
+    if (existing) {
 
-      if (kemasan === "kecil") {
-
-        namaKemasan = "Kecil";
-
-      }
-
-
-      if (kemasan === "besar") {
-
-        namaKemasan = "Besar";
-
-      }
-
-
-      if (kemasan === "1kg") {
-
-        namaKemasan = "1 Kg";
-
-      }
-
-
-      // =====================================================
-      // TENTUKAN NAMA ACARA
-      // =====================================================
-
-      let namaAcara =
-        acaraTerpilih;
-
-
-      // =====================================================
-      // JIKA ACARA LAINNYA
-      // =====================================================
-
-      if (acaraLainnyaMode) {
-
-        namaAcara =
-          acaraNamaLainnya?.value.trim() || "";
-
-
-        // Wajib mengisi jenis acara
-
-        if (!namaAcara) {
-
-          alert(
-            "Silakan tuliskan jenis acara terlebih dahulu."
-          );
-
-
-          acaraNamaLainnya?.focus();
-
-          return;
-
-        }
-
-      }
-
-
-      // =====================================================
-      // NAMA PRODUK
-      // =====================================================
-
-      const namaProduk =
-        `${namaAcara} - Keripik Tempe ${namaKemasan}`;
-
-
-      // =====================================================
-      // TAMBAHKAN KE CART UTAMA
-      // =====================================================
-
-      /*
-        Karena kode ini berada di dalam
-        DOMContentLoaded yang sama dengan
-        sistem cart utama, langsung gunakan
-        variabel cart.
-      */
-
-      const existing =
-        cart.find(item => {
-
-          return (
-            item.name === namaProduk &&
-            Number(item.price) === harga
-          );
-
-        });
-
-
-      // Kalau produk/acara yang sama sudah ada
-
-      if (existing) {
-
-        existing.quantity += jumlah;
-
-      }
-
-      // Kalau belum ada
-
-      else {
-
-        cart.push({
-
-          name:
-            namaProduk,
-
-          price:
-            harga,
-
-          quantity:
-            jumlah
-
-        });
-
-      }
-
-
-      // =====================================================
-      // SIMPAN CART
-      // =====================================================
-
-      saveCart();
-
-
-      // =====================================================
-      // REFRESH CART
-      // =====================================================
-
-      renderCart();
-
-      updateCartCount();
-
-
-      // =====================================================
-      // TUTUP MODAL ACARA
-      // =====================================================
-
-      closeAcaraModal();
-
-
-      // =====================================================
-      // BUKA KERANJANG
-      // =====================================================
-
-      showCart();
+      existing.quantity += jumlah;
 
     }
-  );
+
+    else {
+
+      cart.push({
+        name: namaProduk,
+        price: harga,
+        quantity: jumlah
+      });
+
+    }
+
+
+   saveCart();
+closeAcaraModal();
+
+// Simpan pesanan ke localStorage
+saveCart();
+
+// Tutup modal acara
+closeAcaraModal();
+
+// Pindah ke halaman keranjang
+window.location.href = "./keranjang.html";
+  }
+);
 
   // ==================================================
   // PREVIEW CONTOH KEMASAN
