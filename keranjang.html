@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Keranjang Pesanan - Lancar Abadi</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    /* =========================================
+       HALAMAN KERANJANG
+    ========================================= */
+
+    .keranjang-page {
+      min-height: 100vh;
+      padding: 120px 20px 60px;
+      background: var(--cream-100);
+    }
+
+    .keranjang-container {
+      width: min(100%, 1000px);
+      margin: auto;
+    }
+
+    .keranjang-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .keranjang-header .section-tag {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .keranjang-header h1 {
+      margin: 0 0 10px;
+      color: var(--brown-900);
+    }
+
+    .keranjang-header p {
+      color: var(--text-light);
+    }
+
+    .keranjang-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 25px;
+    }
+
+    .keranjang-box h2 {
+      color: var(--brown-900);
+      margin-bottom: 20px;
+    }
+
+    /* ITEM */
+
+    .keranjang-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--cream-300);
+    }
+
+    .keranjang-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-info h3 {
+      margin: 0 0 7px;
+      color: var(--brown-900);
+      font-size: 17px;
+    }
+
+    .item-info p {
+      margin: 3px 0;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .item-subtotal {
+      font-weight: 700;
+      color: var(--green-600);
+      white-space: nowrap;
+    }
+
+    /* TOTAL */
+
+    .keranjang-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--cream-300);
+    }
+
+    .keranjang-total span {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .keranjang-total strong {
+      font-size: 22px;
+      color: var(--green-600);
+    }
+
+    /* FORM */
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid var(--cream-300);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--green-500);
+    }
+
+    .form-group textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .keranjang-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .btn-kembali {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 20px;
+      border-radius: 10px;
+      background: var(--cream-200);
+      color: var(--brown-900);
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-wa {
+      flex: 1;
+      border: none;
+      cursor: pointer;
+      padding: 14px 20px;
+      border-radius: 10px;
+      background: var(--green-600);
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .btn-wa:hover {
+      background: var(--green-500);
+    }
+
+    .keranjang-kosong {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-light);
+    }
+
+    .keranjang-kosong i {
+      font-size: 45px;
+      margin-bottom: 15px;
+      color: var(--brown-500);
+    }
+
+    .keranjang-kosong h3 {
+      color: var(--brown-900);
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 600px) {
+
+      .keranjang-page {
+        padding: 100px 15px 40px;
+      }
+
+      .keranjang-box {
+        padding: 20px;
+      }
+
+      .keranjang-item {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .item-subtotal {
+        align-self: flex-start;
+      }
+
+      .keranjang-total strong {
+        font-size: 18px;
+      }
+
+      .keranjang-actions {
+        flex-direction: column;
+      }
+
+      .btn-kembali,
+      .btn-wa {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="keranjang-page">
+
+    <div class="keranjang-container">
+
+      <!-- HEADER -->
+
+      <div class="keranjang-header">
+
+        <span class="section-tag">
+          KERANJANG PESANAN
+        </span>
+
+        <h1>Pesanan Anda</h1>
+
+        <p>
+          Periksa pesanan Anda kemudian isi data pemesan.
+        </p>
+
+      </div>
+
+
+      <!-- =====================================
+           DAFTAR PESANAN
+      ====================================== -->
+
+      <div class="keranjang-box">
+
+        <h2>
+          <i class="fas fa-shopping-basket"></i>
+          Detail Pesanan
+        </h2>
+
+        <div id="keranjangItems"></div>
+
+        <div
+          class="keranjang-total"
+          id="keranjangTotalBox"
+        >
+
+          <span>Total Pesanan</span>
+
+          <strong id="keranjangTotal">
+            Rp 0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================
+           DATA CUSTOMER
+      ====================================== -->
+
+      <div class="keranjang-box">
+
+        <h2>
+          <i class="fas fa-user"></i>
+          Data Pemesan
+        </h2>
+
+        <form id="keranjangCheckoutForm">
+
+          <div class="form-group">
+
+            <label for="customerNama">
+              Nama
+            </label>
+
+            <input
+              type="text"
+              id="customerNama"
+              placeholder="Masukkan nama Anda"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="customerWhatsapp">
+              Nomor WhatsApp
+            </label>
+
+            <input
+              type="tel"
+              id="customerWhatsapp"
+              placeholder="Contoh: 081234567890"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="customerAlamat">
+              Alamat
+            </label>
+
+            <textarea
+              id="customerAlamat"
+              placeholder="Masukkan alamat lengkap"
+              required
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="customerCatatan">
+              Catatan
+              <small>(opsional)</small>
+            </label>
+
+            <textarea
+              id="customerCatatan"
+              placeholder="Contoh: dikirim pagi hari"
+            ></textarea>
+
+          </div>
+
+
+          <div class="keranjang-actions">
+
+            <a
+              href="index.html"
+              class="btn-kembali"
+            >
+              <i class="fas fa-arrow-left"></i>
+              Kembali Belanja
+            </a>
+
+            <button
+              type="submit"
+              class="btn-wa"
+            >
+              <i class="fab fa-whatsapp"></i>
+              Kirim Pesanan ke WhatsApp
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    /* =========================================
+       KONFIGURASI
+    ========================================= */
+
+    const OWNER_WHATSAPP =
+      "6289639173344";
+
+    const CART_KEY =
+      "lancarAbadiCart";
+
+
+    /* =========================================
+       FORMAT RUPIAH
+    ========================================= */
+
+    function formatRupiah(angka) {
+
+      return new Intl.NumberFormat(
+        "id-ID",
+        {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0
+        }
+      ).format(angka);
+
+    }
+
+
+    /* =========================================
+       AMBIL CART
+    ========================================= */
+
+    let cart =
+      JSON.parse(
+        localStorage.getItem(CART_KEY)
+      ) || [];
+
+
+    /* =========================================
+       ELEMENT
+    ========================================= */
+
+    const keranjangItems =
+      document.getElementById(
+        "keranjangItems"
+      );
+
+    const keranjangTotal =
+      document.getElementById(
+        "keranjangTotal"
+      );
+
+    const checkoutForm =
+      document.getElementById(
+        "keranjangCheckoutForm"
+      );
+
+
+    /* =========================================
+       TAMPILKAN CART
+    ========================================= */
+
+    function renderKeranjang() {
+
+      if (!keranjangItems) {
+        return;
+      }
+
+
+      if (!cart.length) {
+
+        keranjangItems.innerHTML = `
+
+          <div class="keranjang-kosong">
+
+            <i class="fas fa-shopping-basket"></i>
+
+            <h3>Keranjang masih kosong</h3>
+
+            <p>
+              Silakan pilih produk atau pesanan acara terlebih dahulu.
+            </p>
+
+            <a
+              href="index.html"
+              class="btn-kembali"
+            >
+              Kembali ke Beranda
+            </a>
+
+          </div>
+
+        `;
+
+        if (keranjangTotal) {
+          keranjangTotal.textContent =
+            formatRupiah(0);
+        }
+
+        return;
+      }
+
+
+      let total =
+        0;
+
+
+      keranjangItems.innerHTML =
+        cart.map(item => {
+
+          const quantity =
+            Number(item.quantity) || 0;
+
+          const price =
+            Number(item.price) || 0;
+
+          const subtotal =
+            quantity * price;
+
+          total += subtotal;
+
+
+          return `
+
+            <div class="keranjang-item">
+
+              <div class="item-info">
+
+                <h3>
+                  ${item.name}
+                </h3>
+
+                <p>
+                  ${quantity} × ${formatRupiah(price)}
+                </p>
+
+              </div>
+
+              <div class="item-subtotal">
+                ${formatRupiah(subtotal)}
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+
+      if (keranjangTotal) {
+
+        keranjangTotal.textContent =
+          formatRupiah(total);
+
+      }
+
+    }
+
+
+    /* =========================================
+       CHECKOUT
+    ========================================= */
+
+    checkoutForm?.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+
+        if (!cart.length) {
+
+          alert(
+            "Keranjang masih kosong."
+          );
+
+          return;
+
+        }
+
+
+        const nama =
+          document
+            .getElementById("customerNama")
+            .value
+            .trim();
+
+        const whatsapp =
+          document
+            .getElementById("customerWhatsapp")
+            .value
+            .trim();
+
+        const alamat =
+          document
+            .getElementById("customerAlamat")
+            .value
+            .trim();
+
+        const catatan =
+          document
+            .getElementById("customerCatatan")
+            .value
+            .trim();
+
+
+        if (!nama || !whatsapp || !alamat) {
+
+          alert(
+            "Silakan lengkapi data pemesan."
+          );
+
+          return;
+
+        }
+
+
+        /* =====================================
+           HITUNG TOTAL
+        ===================================== */
+
+        let total =
+          0;
+
+
+        let daftarPesanan =
+          "";
+
+
+        cart.forEach(
+          (item, index) => {
+
+            const quantity =
+              Number(item.quantity) || 0;
+
+            const price =
+              Number(item.price) || 0;
+
+            const subtotal =
+              quantity * price;
+
+            total += subtotal;
+
+
+            daftarPesanan +=
+              `${index + 1}. ${item.name}\n` +
+              `   ${quantity} × ${formatRupiah(price)} = ${formatRupiah(subtotal)}\n`;
+
+          }
+        );
+
+
+        /* =====================================
+           PESAN WHATSAPP
+        ===================================== */
+
+        const pesan =
+
+`Halo Lancar Abadi 👋
+
+Saya ingin memesan:
+
+${daftarPesanan}
+Total: ${formatRupiah(total)}
+
+DATA PEMESAN
+Nama: ${nama}
+WhatsApp: ${whatsapp}
+Alamat: ${alamat}
+Catatan: ${catatan || "-"}
+
+Mohon diproses. Terima kasih.`;
+
+
+        const url =
+          `https://wa.me/${OWNER_WHATSAPP}?text=` +
+          encodeURIComponent(pesan);
+
+
+        /* =====================================
+           BUKA WHATSAPP
+        ===================================== */
+
+        window.location.href =
+          url;
+
+      }
+    );
+
+
+    /* =========================================
+       JALANKAN
+    ========================================= */
+
+    renderKeranjang();
+
+  </script>
+
+</body>
+</html>
